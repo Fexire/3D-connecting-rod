@@ -1,6 +1,9 @@
 #include <glimac/SDLWindowManager.hpp>
 #include <GL/glew.h>
 #include <iostream>
+#include <glimac/Model.hpp>
+#include <glimac/FreeflyCamera.hpp>
+#include <experimental/filesystem>
 
 using namespace glimac;
 
@@ -18,28 +21,18 @@ int main(int argc, char** argv) {
     std::cout << "OpenGL Version : " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GLEW Version : " << glewGetString(GLEW_VERSION) << std::endl;
 
-    GLuint vbo;
-    glGenBuffers(1,&vbo);
-    glBindBuffer(GL_ARRAY_BUFFER,vbo);
-    GLfloat vertices[] = { -0.5f, -0.5f, 0.5f, -0.5f, 0.0f, 0.5f };
+    FilePath applicationPath(argv[0]);
+    Program program(loadProgram(applicationPath.dirPath() + "shaders/model.vs.glsl",
+                              applicationPath.dirPath() + "shaders/model.fs.glsl"));
+    program.use();    
 
-    glBufferData(GL_ARRAY_BUFFER,6 * sizeof(GLfloat), vertices,GL_STATIC_DRAW);
+    Model hangar{"/home/fd/Desktop/3D-connecting-rod/obj/corridor.obj"};
 
-    glBindBuffer(GL_ARRAY_BUFFER,0);
+    glEnable(GL_DEPTH_TEST);
 
-    GLuint vao;
-    glGenVertexArrays(1,&vao);
-    glBindVertexArray(vao);
-    
-    const GLuint VERTEX_ATTR_POSITION = 0;
-    glEnableVertexAttribArray(VERTEX_ATTR_POSITION);
+    FreeflyCamera camera{};
 
-    glBindBuffer(GL_ARRAY_BUFFER,vbo);
-    glVertexAttribPointer(VERTEX_ATTR_POSITION,2, GL_FLOAT,GL_FALSE,2*sizeof(GLfloat),0);
-    glBindBuffer(GL_ARRAY_BUFFER,0);
-    
-    glBindVertexArray(0);
-
+    glm::mat4 projectionMatrix = glm::perspective(glm::radians(70.f),800.f/600.f,0.1f,100.f);
 
     /*****************o***************
      * HERE SHOULD COME THE INITIALIZATION CODE
@@ -48,6 +41,38 @@ int main(int argc, char** argv) {
     // Application loop:
     bool done = false;
     while(!done) {
+        if(windowManager.isKeyPressed(SDLKey::SDLK_LEFT))
+        {
+            camera.rotateLeft(1.0 );
+        }
+        if(windowManager.isKeyPressed(SDLKey::SDLK_RIGHT))
+        {
+            camera.rotateLeft(-1.0 );
+        }
+        if(windowManager.isKeyPressed(SDLKey::SDLK_UP))
+        {
+            camera.rotateUp(1.0 );
+        }
+        if(windowManager.isKeyPressed(SDLKey::SDLK_DOWN))
+        {
+            camera.rotateUp(-1.0 );
+        }
+        if(windowManager.isKeyPressed(SDLKey::SDLK_z))
+        {
+            camera.moveFront(0.1);
+        }
+        if(windowManager.isKeyPressed(SDLKey::SDLK_s))
+        {
+            camera.moveFront(-0.1);
+        }
+        if(windowManager.isKeyPressed(SDLKey::SDLK_d))
+        {
+            camera.moveLeft(-1.);
+        }
+        if(windowManager.isKeyPressed(SDLKey::SDLK_q))
+        {
+            camera.moveLeft(1.);
+        }
         // Event loop:
         SDL_Event e;
         while(windowManager.pollEvent(e)) {
@@ -55,11 +80,16 @@ int main(int argc, char** argv) {
                 done = true; // Leave the loop after this iteration
             }
         }
-
-        glBindVertexArray(vao);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawArrays(GL_TRIANGLES,0,3);
-        glBindVertexArray(0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glm::mat4 viewMatrix = camera.getViewMatrix();
+        glUniformMatrix4fv(program.uViewMatrix, 1, GL_FALSE, 
+            glm::value_ptr(viewMatrix));
+        glUniformMatrix4fv(program.uNormalMatrix, 1, GL_FALSE, 
+            glm::value_ptr(glm::transpose(glm::inverse(viewMatrix))));
+        glUniformMatrix4fv(program.uProjectionMatrix, 1, GL_FALSE, 
+            glm::value_ptr(projectionMatrix * viewMatrix));
+        hangar.Draw(program);
+        
         
         /*********************************
          * HERE SHOULD COME THE RENDERING CODE
@@ -68,7 +98,5 @@ int main(int argc, char** argv) {
         // Update the display
         windowManager.swapBuffers();
     }
-    glDeleteBuffers(1,&vbo);
-    glDeleteVertexArrays(1,&vao);
     return EXIT_SUCCESS;
 }

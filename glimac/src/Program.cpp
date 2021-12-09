@@ -68,6 +68,8 @@ Program loadProgram(const FilePath& vsFile, const FilePath& fsFile) {
         throw std::runtime_error("Link error (for files " + vsFile.str() + " and " + fsFile.str() + "): " + program.getInfoLog());
 	}
 
+	
+
 	return program;
 }
 
