@@ -63,6 +63,7 @@ namespace glimac
 
 		GLuint m_nGLId;
 		
+		
 	};
 
 	// Build a GLSL program from source code

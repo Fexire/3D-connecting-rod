@@ -12,7 +12,10 @@ uniform mat4 uProjectionMatrix;
 
 void main()
 {
+    vec4 vertexPosition = vec4(aPos, 1);
+    vec4 vertexNormal = vec4(aNormal, 0);
     TexCoords = aTexCoords;
-    normal = aNormal;
-    gl_Position = uProjectionMatrix * uViewMatrix * uNormalMatrix * vec4(aPos, 1.0);
+    
+    normal = vec3(uNormalMatrix * vertexNormal);
+    gl_Position = uProjectionMatrix * vertexPosition;
 }

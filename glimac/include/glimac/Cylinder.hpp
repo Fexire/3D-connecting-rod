@@ -7,12 +7,12 @@
 namespace glimac
 {
     // canonic cube
-    class Cube
+    class Cylinder
     {
     public:
-        Cube() = default;
+        Cylinder() = default;
 
-        Mesh build();
+        Mesh build(int nbTriangles);
 
     private:
 
