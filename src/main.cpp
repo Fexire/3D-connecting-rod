@@ -6,6 +6,8 @@
 #include <glimac/Cube.hpp>
 #include <glimac/Cylinder.hpp>
 #include <experimental/filesystem>
+#include <glimac/SceneStructure.hpp>
+#include <glimac/Rod.hpp>
 
 using namespace glimac;
 
@@ -36,16 +38,9 @@ int main(int argc, char **argv)
 
     FreeflyCamera camera{};
 
-    Cube cube{};
+    Rod rod{4,5,1};
+
     //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-
-    Mesh cubeMesh = cube.build();
-
-    Cylinder cylinder;
-    Mesh cylinderMesh = cylinder.build(100);
-
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(70.f), 800.f / 600.f, 0.1f, 100.f);
-
     /*****************o***************
      * HERE SHOULD COME THE INITIALIZATION CODE
      *********************************/
@@ -96,16 +91,9 @@ int main(int argc, char **argv)
             }
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 viewMatrix = camera.getViewMatrix();
-        glUniformMatrix4fv(program.uViewMatrix, 1, GL_FALSE,
-                           glm::value_ptr(viewMatrix));
-        glUniformMatrix4fv(program.uNormalMatrix, 1, GL_FALSE,
-                           glm::value_ptr(glm::transpose(glm::inverse(viewMatrix))));
-        glUniformMatrix4fv(program.uProjectionMatrix, 1, GL_FALSE,
-                           glm::value_ptr(projectionMatrix * viewMatrix));
-        hangar.Draw(program);
-        cylinderMesh.Draw(program);
-
+        
+        //hangar.Draw(program,camera);
+        rod.draw(program,camera);
         /*********************************
          * HERE SHOULD COME THE RENDERING CODE
          *********************************/

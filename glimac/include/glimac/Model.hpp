@@ -32,10 +32,13 @@ public:
     }
 
     // draws the model, and thus all its meshes
-    void Draw(Program &program)
+    void Draw(Program &program,FreeflyCamera& camera)
     {
         for(unsigned int i = 0; i < meshes.size(); i++)
-            meshes[i].Draw(program);
+        {
+            glm::mat4 idMatrix = glm::mat4(1);
+            meshes[i].Draw(program,idMatrix,camera);
+        }
     }
     
 private:

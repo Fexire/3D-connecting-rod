@@ -47,7 +47,7 @@ public:
     }
 
     // render the mesh
-    void Draw(Program &program)
+    void Draw(Program &program,glm::mat4 objectMatrix,FreeflyCamera& camera)
     {
         // bind appropriate textures
         unsigned int diffuseNr = 1;
@@ -74,6 +74,8 @@ public:
             // and finally bind the texture
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
+
+        program.updateMatrices(camera,objectMatrix);
         
         // draw mesh
         glBindVertexArray(VAO);
@@ -83,6 +85,8 @@ public:
 
         // always good practice to set everything back to defaults once configured.
         glActiveTexture(GL_TEXTURE0);
+        
+        
     }
 
 private:

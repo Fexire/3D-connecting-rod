@@ -10,9 +10,9 @@ public:
     {
     }
 
-    void draw(Program& program)
-    {   
-        mesh.Draw(program);
+    void draw(Program &program,glm::mat4& parentMatrix,  FreeflyCamera &camera)
+    {
+        mesh.Draw(program, parentMatrix * matrix , camera);
     }
 
     ~SceneObject() = default;

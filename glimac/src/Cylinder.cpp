@@ -15,14 +15,14 @@ namespace glimac
         vertex.Normal.z = 1.;
         vertex.Position.x = 0;
         vertex.Position.y = 0;
-        vertex.Position.z = 1.;
+        vertex.Position.z = 0.5;
         vertices.emplace_back(vertex);
 
         float angle = M_2_PI * 10 / nbTriangles;
         for (uint i = 0; i < nbTriangles; i++)
         {
-            vertex.Position.x = cos(i * angle);
-            vertex.Position.y = sin(i * angle);
+            vertex.Position.x = cos(i * angle)/2.;
+            vertex.Position.y = sin(i * angle)/2.;
             vertices.emplace_back(vertex);
         }
 
@@ -31,33 +31,33 @@ namespace glimac
         vertex.Normal.z = -1.;
         vertex.Position.x = 0;
         vertex.Position.y = 0;
-        vertex.Position.z = -1.;
+        vertex.Position.z = -0.5;
         vertices.emplace_back(vertex);
 
         for (uint i = 0; i < nbTriangles; i++)
         {
-            vertex.Position.x = cos(i * angle);
-            vertex.Position.y = sin(i * angle);
+            vertex.Position.x = cos(i * angle)/2.;
+            vertex.Position.y = sin(i * angle)/2.;
             vertices.emplace_back(vertex);
         }
 
-        vertex.Position.z = -1;
+        vertex.Position.z = -0.5;
         vertex.Normal.z = 0.;
         for (uint i = 0; i < nbTriangles; i++)
         {
-            vertex.Position.x = cos(i * angle);
-            vertex.Position.y = sin(i * angle);
+            vertex.Position.x = cos(i * angle)/2.;
+            vertex.Position.y = sin(i * angle)/2.;
             vertex.Normal.x = cos(i * angle);
             vertex.Normal.y = sin(i * angle);
             vertices.emplace_back(vertex);
         }
 
-        vertex.Position.z = 1;
+        vertex.Position.z = 0.5;
         vertex.Normal.z = 0.;
         for (uint i = 0; i < nbTriangles; i++)
         {
-            vertex.Position.x = cos(i * angle);
-            vertex.Position.y = sin(i * angle);
+            vertex.Position.x = cos(i * angle)/2.;
+            vertex.Position.y = sin(i * angle)/2.;
             vertex.Normal.x = cos(i * angle);
             vertex.Normal.y = sin(i * angle);
             vertices.emplace_back(vertex);
