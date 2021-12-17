@@ -54,11 +54,29 @@ namespace glimac
 			uProjectionMatrix = glGetUniformLocation(m_nGLId, "uProjectionMatrix");
 			uViewMatrix = glGetUniformLocation(m_nGLId, "uViewMatrix");
 			uNormalMatrix = glGetUniformLocation(m_nGLId, "uNormalMatrix");
+			uCameraPos = glGetUniformLocation(m_nGLId, "uCameraPos");
+			uCameraLight = glGetUniformLocation(m_nGLId, "uCameraLight");
+			uRodLight = glGetUniformLocation(m_nGLId, "uRodLight");
+			uRoomLights = glGetUniformLocation(m_nGLId, "uRoomLights");
+			uRodPos = glGetUniformLocation(m_nGLId, "uRodPos");
 		}
 
-		void updateMatrices(FreeflyCamera &camera, glm::mat4& objectMatrix)
+		void setRodPos(glm::vec3 newRodPos)
 		{
+			rodPos = newRodPos;
+		}
+
+		void updateUniforms(FreeflyCamera &camera, glm::mat4 &objectMatrix)
+		{
+			glUniform1i(uCameraLight, cameraLight);
+			glUniform1i(uRoomLights, roomLights);
+			glUniform1i(uRodLight, rodLight);
+
 			glm::mat4 viewMatrix = camera.getViewMatrix();
+			glm::vec4 cameraPos = viewMatrix * glm::vec4(camera.getPosition(), 1.);
+			glm::vec4 newRodPos = viewMatrix * glm::vec4(rodPos, 1.);
+			glUniform3f(uRodPos, newRodPos.x, newRodPos.y, newRodPos.z);
+			glUniform3f(uCameraPos, cameraPos.x, cameraPos.y, cameraPos.z);
 			viewMatrix = viewMatrix * objectMatrix;
 			glUniformMatrix4fv(uViewMatrix, 1, GL_FALSE,
 							   glm::value_ptr(viewMatrix));
@@ -66,6 +84,21 @@ namespace glimac
 							   glm::value_ptr(glm::transpose(glm::inverse(viewMatrix))));
 			glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE,
 							   glm::value_ptr(projectionMatrix * viewMatrix));
+		}
+
+		void onOffCameraLight()
+		{
+			cameraLight = !cameraLight;
+		}
+
+		void onOffRodLight()
+		{
+			rodLight = !rodLight;
+		}
+
+		void onOffRoomLight()
+		{
+			roomLights = !roomLights;
 		}
 
 	private:
@@ -76,6 +109,15 @@ namespace glimac
 		GLuint uProjectionMatrix;
 		GLuint uViewMatrix;
 		GLuint uNormalMatrix;
+		GLuint uCameraPos;
+		GLuint uRodPos;
+		GLuint uCameraLight;
+		GLuint uRodLight;
+		GLuint uRoomLights;
+		bool cameraLight = true;
+		bool rodLight = true;
+		bool roomLights = true;
+		glm::vec3 rodPos;
 	};
 
 	// Build a GLSL program from source code

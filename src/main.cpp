@@ -3,8 +3,6 @@
 #include <iostream>
 #include <glimac/Model.hpp>
 #include <glimac/FreeflyCamera.hpp>
-#include <glimac/Cube.hpp>
-#include <glimac/Cylinder.hpp>
 #include <experimental/filesystem>
 #include <glimac/SceneStructure.hpp>
 #include <glimac/Rod.hpp>
@@ -14,6 +12,7 @@ using namespace glimac;
 int main(int argc, char **argv)
 {
     // Initialize SDL and open a window
+
     SDLWindowManager windowManager(800, 600, "GLImac");
 
     // Initialize glew for OpenGL3+ support
@@ -38,49 +37,19 @@ int main(int argc, char **argv)
 
     FreeflyCamera camera{};
 
-    Rod rod{4,5,1};
+    Rod rod{15, 5, 1};
 
-    //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     /*****************o***************
      * HERE SHOULD COME THE INITIALIZATION CODE
      *********************************/
 
     // Application loop:
+    glm::ivec2 mousePosition;
+    float speed = 0.1;
     bool done = false;
     while (!done)
     {
-        if (windowManager.isKeyPressed(SDLKey::SDLK_LEFT))
-        {
-            camera.rotateLeft(1.0);
-        }
-        if (windowManager.isKeyPressed(SDLKey::SDLK_RIGHT))
-        {
-            camera.rotateLeft(-1.0);
-        }
-        if (windowManager.isKeyPressed(SDLKey::SDLK_UP))
-        {
-            camera.rotateUp(1.0);
-        }
-        if (windowManager.isKeyPressed(SDLKey::SDLK_DOWN))
-        {
-            camera.rotateUp(-1.0);
-        }
-        if (windowManager.isKeyPressed(SDLKey::SDLK_z))
-        {
-            camera.moveFront(0.1);
-        }
-        if (windowManager.isKeyPressed(SDLKey::SDLK_s))
-        {
-            camera.moveFront(-0.1);
-        }
-        if (windowManager.isKeyPressed(SDLKey::SDLK_d))
-        {
-            camera.moveLeft(-1.);
-        }
-        if (windowManager.isKeyPressed(SDLKey::SDLK_q))
-        {
-            camera.moveLeft(1.);
-        }
         // Event loop:
         SDL_Event e;
         while (windowManager.pollEvent(e))
@@ -89,16 +58,76 @@ int main(int argc, char **argv)
             {
                 done = true; // Leave the loop after this iteration
             }
+            if(e.type == SDL_KEYDOWN)
+            {
+                if (windowManager.isKeyPressed(SDLKey::SDLK_e))
+                {
+                    rod.runStopUpdate();
+                }
+                if (windowManager.isKeyPressed(SDLKey::SDLK_r))
+                {
+                    rod.speedUp();
+                }
+                if (windowManager.isKeyPressed(SDLKey::SDLK_f))
+                {
+                    rod.speedDown();
+                }
+                if (windowManager.isKeyPressed(SDLKey::SDLK_ESCAPE))
+                {
+                    done = true;
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_F1))
+                {
+                    program.onOffCameraLight();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_F2))
+                {
+                    program.onOffRodLight();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_F3))
+                {
+                    program.onOffRoomLight();
+                }
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if (windowManager.isMouseButtonPressed(SDL_BUTTON_RIGHT))
+                {
+                    mousePosition = windowManager.getMousePosition();
+                }
+            }
         }
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if (windowManager.isMouseButtonPressed(SDL_BUTTON_RIGHT))
+        {
+            glm::ivec2 newMousePos;
+            newMousePos = windowManager.getMousePosition();
+            camera.rotateLeft(speed * -(newMousePos.x - mousePosition.x));
+            mousePosition = newMousePos;
+        }
+        if (windowManager.isKeyPressed(SDLKey::SDLK_z))
+        {
+            camera.moveFront(speed);
+        }
+        if (windowManager.isKeyPressed(SDLKey::SDLK_s))
+        {
+            camera.moveFront(-speed);
+        }
+        if (windowManager.isKeyPressed(SDLKey::SDLK_d))
+        {
+            camera.moveLeft(-speed);
+        }
+        if (windowManager.isKeyPressed(SDLKey::SDLK_q))
+        {
+            camera.moveLeft(speed);
+        }
         
-        //hangar.Draw(program,camera);
-        rod.draw(program,camera);
-        /*********************************
-         * HERE SHOULD COME THE RENDERING CODE
-         *********************************/
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Update the display
+        // hangar.Draw(program,camera);
+        rod.draw(program, camera);
+
+        
+
         windowManager.swapBuffers();
     }
     return EXIT_SUCCESS;

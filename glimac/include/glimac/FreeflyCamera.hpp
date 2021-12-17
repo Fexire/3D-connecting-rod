@@ -41,13 +41,17 @@ public:
     }
 
     glm::mat4 getViewMatrix() const
-    {
-        
+    {   
         return glm::lookAt(m_Position, m_Position + m_FrontVector,m_UpVector);
     }
 
+    glm::vec3& getPosition()
+    {
+        return m_Position;
+    }
+
 private:
-    glm::vec3 m_Position{0,0,0};
+    glm::vec3 m_Position{0,0,10};
     float m_fPhi = M_PI;
     float m_fTheta = 0;
     glm::vec3 m_FrontVector;
