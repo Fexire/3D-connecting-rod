@@ -22,8 +22,8 @@ public:
         matrix = glm::scale(matrix, glm::vec3(e, e, e));
         structure.objects.emplace_back(Shape::buildCube(), matrix);
         matrix = glm::mat4(1);
-        matrix = glm::translate(matrix, glm::vec3(l/2, 0, 0));
-        matrix = glm::scale(matrix, glm::vec3(l, 1, 1));
+        matrix = glm::translate(matrix, glm::vec3(l / 2, 0, 0));
+        matrix = glm::scale(matrix, glm::vec3(l, e / 2, e / 2));
         matrix = glm::rotate(matrix, float(M_PI_2), glm::vec3(0, 1, 0));
         structure.objects.emplace_back(Shape::buildCylinder(100, false), matrix);
         structure.matrix = structureMatrix;
@@ -110,7 +110,7 @@ public:
         matrix = newMatrix;
     }
 
-    const glm::mat4& getMatrix()
+    const glm::mat4 &getMatrix()
     {
         return matrix;
     }

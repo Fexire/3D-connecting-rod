@@ -31,7 +31,7 @@ int main(int argc, char **argv)
                                 applicationPath.dirPath() + "shaders/model.fs.glsl"));
     program.use();
 
-    Model hangar{"/home/fd/Desktop/3D-connecting-rod/obj/corridor.obj"};
+    Model hangar{"/home/fd/Desktop/3D-connecting-rod/assets/Shelter.obj"};
 
     glEnable(GL_DEPTH_TEST);
 
@@ -88,6 +88,30 @@ int main(int argc, char **argv)
                 {
                     program.onOffRoomLight();
                 }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_t))
+                {
+                    rod.thicknessUp();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_g))
+                {
+                    rod.thicknessDown();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_y))
+                {
+                    rod.armLengthUp();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_h))
+                {
+                    rod.armLengthDown();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_u))
+                {
+                    rod.treeLengthUp();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_j))
+                {
+                    rod.treeLengthDown();
+                }
             }
             if (e.type == SDL_MOUSEBUTTONDOWN)
             {
@@ -123,9 +147,10 @@ int main(int argc, char **argv)
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // hangar.Draw(program,camera);
+        program.updateLights(camera,rod.getTreeMatrix(),rod.midAB());
+        hangar.Draw(program,camera);
         rod.draw(program, camera);
-
+        
         
 
         windowManager.swapBuffers();

@@ -4,6 +4,7 @@
 #include "Shader.hpp"
 #include "FilePath.hpp"
 #include "FreeflyCamera.hpp"
+#include "SpotLight.hpp"
 
 namespace glimac
 {
@@ -59,11 +60,17 @@ namespace glimac
 			uRodLight = glGetUniformLocation(m_nGLId, "uRodLight");
 			uRoomLights = glGetUniformLocation(m_nGLId, "uRoomLights");
 			uRodPos = glGetUniformLocation(m_nGLId, "uRodPos");
+			uCameraDir = glGetUniformLocation(m_nGLId, "uCameraDir");
+			uRodDir = glGetUniformLocation(m_nGLId, "uRodDir");
+			uRoomPos = glGetUniformLocation(m_nGLId, "uRoomPos");
 		}
 
-		void setRodPos(glm::vec3 newRodPos)
+		void updateLights(FreeflyCamera &camera, const glm::mat4 &treeMatrix, float mid)
 		{
-			rodPos = newRodPos;
+			cameraSpotLight.position = glm::vec4(camera.getPosition(), 1);
+			cameraSpotLight.direction = glm::vec4(camera.getFrontVector(), 0);
+			rodSpotLight.position = glm::translate(glm::mat4(1), glm::vec3(-mid, 5, 0)) * treeMatrix * glm::vec4(0, 0, 0, 1);
+			rodSpotLight.direction = treeMatrix * glm::vec4(0, 0, 0, 1) - rodSpotLight.position;
 		}
 
 		void updateUniforms(FreeflyCamera &camera, glm::mat4 &objectMatrix)
@@ -73,10 +80,17 @@ namespace glimac
 			glUniform1i(uRodLight, rodLight);
 
 			glm::mat4 viewMatrix = camera.getViewMatrix();
-			glm::vec4 cameraPos = viewMatrix * glm::vec4(camera.getPosition(), 1.);
-			glm::vec4 newRodPos = viewMatrix * glm::vec4(rodPos, 1.);
-			glUniform3f(uRodPos, newRodPos.x, newRodPos.y, newRodPos.z);
+			glm::vec4 cameraPos = viewMatrix * cameraSpotLight.position;
 			glUniform3f(uCameraPos, cameraPos.x, cameraPos.y, cameraPos.z);
+			glm::vec4 newRodPos = viewMatrix * rodSpotLight.position;
+			glUniform3f(uRodPos, newRodPos.x, newRodPos.y, newRodPos.z);
+			glm::vec4 cameraDir = viewMatrix * cameraSpotLight.direction;
+			glUniform3f(uCameraDir, cameraDir.x, cameraDir.y, cameraDir.z);
+			glm::vec4 rodDir = viewMatrix * rodSpotLight.direction;
+			glUniform3f(uRodDir, rodDir.x, rodDir.y, rodDir.z);
+			glm::vec4 roomLigthPos = viewMatrix * glm::vec4(0, 10, 0, 1);
+			glUniform3f(uRoomPos, roomLigthPos.x, roomLigthPos.y, roomLigthPos.z);
+
 			viewMatrix = viewMatrix * objectMatrix;
 			glUniformMatrix4fv(uViewMatrix, 1, GL_FALSE,
 							   glm::value_ptr(viewMatrix));
@@ -111,13 +125,17 @@ namespace glimac
 		GLuint uNormalMatrix;
 		GLuint uCameraPos;
 		GLuint uRodPos;
+		GLuint uRoomPos;
 		GLuint uCameraLight;
 		GLuint uRodLight;
 		GLuint uRoomLights;
+		GLuint uCameraDir;
+		GLuint uRodDir;
+		SpotLight cameraSpotLight;
+		SpotLight rodSpotLight;
 		bool cameraLight = true;
 		bool rodLight = true;
 		bool roomLights = true;
-		glm::vec3 rodPos;
 	};
 
 	// Build a GLSL program from source code

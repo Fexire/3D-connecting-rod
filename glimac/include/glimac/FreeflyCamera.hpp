@@ -50,6 +50,11 @@ public:
         return m_Position;
     }
 
+    glm::vec3& getFrontVector()
+    {
+        return m_FrontVector;
+    }
+
 private:
     glm::vec3 m_Position{0,0,10};
     float m_fPhi = M_PI;
