@@ -17,12 +17,12 @@ public:
     {
         glm::mat4 treeMatrix;
         treeMatrix = glm::rotate(treeMatrix, float(M_PI), glm::vec3(0, 0, 1));
-        treeMatrix = glm::translate(treeMatrix, glm::vec3(-(-((l + d + e) / 2) + d + l), 0, 3 * e));
+        treeMatrix = glm::translate(treeMatrix, glm::vec3(-(-((l + d + e) / 2) + d + l), -5, 3 * e));
         tree = SceneStructure::generateTree(l, e, treeMatrix);
         glm::mat4 matrix;
-        arm = SceneStructure::generateArm(d, e, glm::translate(matrix, glm::vec3(-((l + d + e) / 2), 0, e + e / 2)));
-        piston = SceneStructure::generatePiston(e, glm::translate(matrix, glm::vec3(-((l + d + e) / 2) + d + l, 0, e)));
-        rail = SceneStructure::generateRail(l, d, e, matrix);
+        arm = SceneStructure::generateArm(d, e, glm::translate(matrix, glm::vec3(-((l + d + e) / 2), 5, e + e / 2)));
+        piston = SceneStructure::generatePiston(e, glm::translate(matrix, glm::vec3(-((l + d + e) / 2) + d + l, 5, e)));
+        rail = SceneStructure::generateRail(l, d, e, glm::translate(matrix, glm::vec3(0,5,0)));
         resetToState();
     }
 

@@ -33,15 +33,17 @@ public:
     vector<Vertex> vertices;
     vector<unsigned int> indices;
     vector<Texture> textures;
+    glm::vec3 color;
 
     unsigned int VAO;
 
     // constructor
-    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, glm::vec3 color = glm::vec3(1, 1, 1))
     {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
+        this->color = color;
 
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
@@ -57,7 +59,7 @@ public:
         unsigned int heightNr = 1;
         if (textures.size() == 0)
         {
-            glUniform4f(glGetUniformLocation(program.getGLId(), "uColor"),1,1,1,1 );
+            glUniform3f(glGetUniformLocation(program.getGLId(), "uColor"), color.x, color.y, color.z);
         }
         else
         {
@@ -75,7 +77,6 @@ public:
                     number = std::to_string(normalNr++); // transfer unsigned int to string
                 else if (name == "texture_height")
                     number = std::to_string(heightNr++); // transfer unsigned int to string
-
                 // now set the sampler to the correct texture unit
                 glUniform1i(glGetUniformLocation(program.getGLId(), (name + number).c_str()), i);
                 // and finally bind the texture

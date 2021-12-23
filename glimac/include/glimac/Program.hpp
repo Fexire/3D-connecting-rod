@@ -63,6 +63,7 @@ namespace glimac
 			uCameraDir = glGetUniformLocation(m_nGLId, "uCameraDir");
 			uRodDir = glGetUniformLocation(m_nGLId, "uRodDir");
 			uRoomPos = glGetUniformLocation(m_nGLId, "uRoomPos");
+			uFlashLightMode = glGetUniformLocation(m_nGLId, "uFlashLightMode");
 		}
 
 		void updateLights(FreeflyCamera &camera, const glm::mat4 &treeMatrix, float mid)
@@ -78,6 +79,7 @@ namespace glimac
 			glUniform1i(uCameraLight, cameraLight);
 			glUniform1i(uRoomLights, roomLights);
 			glUniform1i(uRodLight, rodLight);
+			glUniform1i(uFlashLightMode, flashMode);
 
 			glm::mat4 viewMatrix = camera.getViewMatrix();
 			glm::vec4 cameraPos = viewMatrix * cameraSpotLight.position;
@@ -88,10 +90,11 @@ namespace glimac
 			glUniform3f(uCameraDir, cameraDir.x, cameraDir.y, cameraDir.z);
 			glm::vec4 rodDir = viewMatrix * rodSpotLight.direction;
 			glUniform3f(uRodDir, rodDir.x, rodDir.y, rodDir.z);
-			glm::vec4 roomLigthPos = viewMatrix * glm::vec4(0, 10, 0, 1);
+			glm::vec4 roomLigthPos = viewMatrix * glm::vec4(0, 10, 5, 1);
 			glUniform3f(uRoomPos, roomLigthPos.x, roomLigthPos.y, roomLigthPos.z);
 
 			viewMatrix = viewMatrix * objectMatrix;
+
 			glUniformMatrix4fv(uViewMatrix, 1, GL_FALSE,
 							   glm::value_ptr(viewMatrix));
 			glUniformMatrix4fv(uNormalMatrix, 1, GL_FALSE,
@@ -115,6 +118,11 @@ namespace glimac
 			roomLights = !roomLights;
 		}
 
+		void onOffFlashMode()
+		{
+			flashMode = !flashMode;
+		}
+
 	private:
 		Program(const Program &);
 		Program &operator=(const Program &);
@@ -129,6 +137,7 @@ namespace glimac
 		GLuint uCameraLight;
 		GLuint uRodLight;
 		GLuint uRoomLights;
+		GLuint uFlashLightMode;
 		GLuint uCameraDir;
 		GLuint uRodDir;
 		SpotLight cameraSpotLight;
@@ -136,6 +145,7 @@ namespace glimac
 		bool cameraLight = true;
 		bool rodLight = true;
 		bool roomLights = true;
+		bool flashMode = false;
 	};
 
 	// Build a GLSL program from source code

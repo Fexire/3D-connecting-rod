@@ -4,8 +4,8 @@
 
 class Shape
 {
-    public :
-    static Mesh buildCube()
+public:
+    static Mesh buildCube(glm::vec3 color)
     {
         std::vector<Vertex> vertices;
         std::vector<GLuint> indices;
@@ -141,10 +141,10 @@ class Shape
             indices.emplace_back(i + 3);
         }
 
-        return Mesh(vertices, indices, textures);
+        return Mesh(vertices, indices, textures, color);
     }
 
-    static Mesh buildCylinder(int nbTriangles, bool semi)
+    static Mesh buildCylinder(int nbTriangles, bool semi, glm::vec3 color)
     {
         std::vector<Vertex> vertices;
         std::vector<GLuint> indices;
@@ -284,6 +284,6 @@ class Shape
             indices.emplace_back(i + nbTriangles + 1);
         }
 
-        return Mesh(vertices, indices, textures);
+        return Mesh(vertices, indices, textures, color);
     }
 };

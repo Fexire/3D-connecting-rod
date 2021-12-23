@@ -31,7 +31,7 @@ int main(int argc, char **argv)
                                 applicationPath.dirPath() + "shaders/model.fs.glsl"));
     program.use();
 
-    Model hangar{"/home/fd/Desktop/3D-connecting-rod/assets/Shelter.obj"};
+    Model hangar{"/home/fd/Desktop/3D-connecting-rod/assets/hangar.fbx",1};
 
     glEnable(GL_DEPTH_TEST);
 
@@ -87,6 +87,10 @@ int main(int argc, char **argv)
                 if(windowManager.isKeyPressed(SDLKey::SDLK_F3))
                 {
                     program.onOffRoomLight();
+                }
+                if(windowManager.isKeyPressed(SDLKey::SDLK_F4))
+                {
+                    program.onOffFlashMode();
                 }
                 if(windowManager.isKeyPressed(SDLKey::SDLK_t))
                 {
@@ -151,8 +155,6 @@ int main(int argc, char **argv)
         hangar.Draw(program,camera);
         rod.draw(program, camera);
         
-        
-
         windowManager.swapBuffers();
     }
     return EXIT_SUCCESS;

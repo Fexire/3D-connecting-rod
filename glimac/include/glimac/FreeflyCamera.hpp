@@ -56,7 +56,7 @@ public:
     }
 
 private:
-    glm::vec3 m_Position{0,0,10};
+    glm::vec3 m_Position{0,5,10};
     float m_fPhi = M_PI;
     float m_fTheta = 0;
     glm::vec3 m_FrontVector;
