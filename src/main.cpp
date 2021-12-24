@@ -31,7 +31,7 @@ int main(int argc, char **argv)
                                 applicationPath.dirPath() + "shaders/model.fs.glsl"));
     program.use();
 
-    Model hangar{"/home/fd/Desktop/3D-connecting-rod/assets/hangar.fbx",1};
+    Model hangar{"../assets/hangar.fbx",1};
 
     glEnable(GL_DEPTH_TEST);
 
@@ -130,6 +130,7 @@ int main(int argc, char **argv)
             glm::ivec2 newMousePos;
             newMousePos = windowManager.getMousePosition();
             camera.rotateLeft(speed * -(newMousePos.x - mousePosition.x));
+            camera.rotateUp(speed * -(newMousePos.y - mousePosition.y));
             mousePosition = newMousePos;
         }
         if (windowManager.isKeyPressed(SDLKey::SDLK_z))
@@ -154,7 +155,6 @@ int main(int argc, char **argv)
         program.updateLights(camera,rod.getTreeMatrix(),rod.midAB());
         hangar.Draw(program,camera);
         rod.draw(program, camera);
-        
         windowManager.swapBuffers();
     }
     return EXIT_SUCCESS;

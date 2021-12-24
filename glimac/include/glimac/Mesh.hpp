@@ -57,11 +57,8 @@ public:
         unsigned int specularNr = 1;
         unsigned int normalNr = 1;
         unsigned int heightNr = 1;
-        if (textures.size() == 0)
-        {
-            glUniform3f(glGetUniformLocation(program.getGLId(), "uColor"), color.x, color.y, color.z);
-        }
-        else
+        glUniform3f(glGetUniformLocation(program.getGLId(), "uColor"), color.x, color.y, color.z);
+        if (textures.size() != 0)
         {
             for (unsigned int i = 0; i < textures.size(); i++)
             {

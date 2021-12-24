@@ -29,12 +29,12 @@ vec3 blinnPhongSpot(vec3 uLightPos_vs,vec3 uLightDir,vec3 Kd,vec3 Ks )
     float d = distance(vPosition_vs,uLightPos_vs);
     vec3 Li = (uLightIntensity/(d*d));
     vec3 halfVector = normalize((wi+w0)/2.);
-    float shininess = 0.5;
-    float flashLightSize = -0.85;
-    vec3 v = normalize(uLightPos_vs-vPosition_vs);
-    float angleEffect = dot(-wi,v);
+    float shininess = 128;
     if(uFlashLightMode)
     {
+        float flashLightSize = -0.85;
+        vec3 v = normalize(uLightPos_vs-vPosition_vs);
+        float angleEffect = dot(-wi,v);
         if(angleEffect<flashLightSize)
         {
             return  Li * uColor * ((flashLightSize - angleEffect)*10) * ( Kd * dot(wi,N)  + Ks * pow(dot( halfVector,N ),shininess));
@@ -47,14 +47,14 @@ vec3 blinnPhongSpot(vec3 uLightPos_vs,vec3 uLightDir,vec3 Kd,vec3 Ks )
 
 vec3 blinnPhongPoint(vec3 uLightPos_vs,vec3 Kd,vec3 Ks )
 {
-    vec3 uLightIntensity = vec3(100,100,100);
+    vec3 uLightIntensity = vec3(200,200,200);
     vec3 w0 = normalize(-vPosition_vs);
     vec3 N = normalize(vNormal_vs);
     vec3 wi = normalize(uLightPos_vs - vPosition_vs);
     float d = distance(vPosition_vs,uLightPos_vs);
     vec3 Li = (uLightIntensity/(d*d));
     vec3 halfVector = normalize((wi+w0)/2.);
-    float shininess = 24;
+    float shininess = 20;
     return Li * uColor * ( Kd * dot(wi,N)  + Ks * pow(dot( halfVector,N ),shininess));
 }
 

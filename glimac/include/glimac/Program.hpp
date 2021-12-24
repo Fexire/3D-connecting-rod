@@ -90,7 +90,7 @@ namespace glimac
 			glUniform3f(uCameraDir, cameraDir.x, cameraDir.y, cameraDir.z);
 			glm::vec4 rodDir = viewMatrix * rodSpotLight.direction;
 			glUniform3f(uRodDir, rodDir.x, rodDir.y, rodDir.z);
-			glm::vec4 roomLigthPos = viewMatrix * glm::vec4(0, 10, 5, 1);
+			glm::vec4 roomLigthPos = viewMatrix * glm::vec4(0, 15, 10, 1);
 			glUniform3f(uRoomPos, roomLigthPos.x, roomLigthPos.y, roomLigthPos.z);
 
 			viewMatrix = viewMatrix * objectMatrix;
@@ -142,8 +142,8 @@ namespace glimac
 		GLuint uRodDir;
 		SpotLight cameraSpotLight;
 		SpotLight rodSpotLight;
-		bool cameraLight = true;
-		bool rodLight = true;
+		bool cameraLight = false;
+		bool rodLight = false;
 		bool roomLights = true;
 		bool flashMode = false;
 	};
